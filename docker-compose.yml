@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  ts-node-docker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ./src:/node-ts/src
+      - ./nodemon.json:/node-ts/nodemon.json
+    container_name: ts-node-docker-attainment-server
+    ports:
+      - "8080:8080"
+    command: npm run dev
+    depends_on:
+      - mongo
+    links:
+      - mongo
+
+  mongo:
+    container_name: attainment_mongo
+    image: "mongo:3.4.18"
+    ports:
+      - "27017:27017"
+    command: "mongod"
+    expose:
+      - 27017
+    # command: ["--bind_ip_all"]
+    volumes:
+      - messenger-nosql:/home/messenger-mongo/data/db
+
+volumes:
+  messenger-nosql:
+  messenger-sql:
